@@ -1,7 +1,7 @@
 steps:
   - label: Async Engine, Inputs, Utils, Worker Test
     agents:
-        queue: moc-cpu
+        queue: moc-a100
     soft_fail: false
     retry:
       automatic:
