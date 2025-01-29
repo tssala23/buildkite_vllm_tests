@@ -1,0 +1,23 @@
+steps:
+  - label: Documentation Build
+    agents:
+        queue: moc-cpu
+    soft_fail: false
+    retry:
+      automatic:
+        - exit_status: -1  # Agent was lost
+          limit: 1
+        - exit_status: -10  # Agent was lost
+          limit: 1
+    commands:
+      - cd /vllm-workspace/test_docs/docs
+      - pip install -r requirements-docs.txt
+      - SPHINXOPTS=\"-W\" make html
+      # Check API reference (if it fails, you may have missing mock imports)
+      - grep \"sig sig-object py\" build/html/api/inference_params.html
+    plugins:
+      - kubernetes:
+          podSpec:
+            priorityClassName: ci
+            containers:
+            - image: public.ecr.aws/q9t5s3a7/vllm-ci-postmerge-repo:c92acb9693c0504d7dabed2a0251b9f5d4ddaebb
