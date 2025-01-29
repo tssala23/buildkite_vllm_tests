@@ -24,4 +24,4 @@ steps:
           podSpec:
             priorityClassName: ci
             containers:
-            - image: public.ecr.aws/q9t5s3a7/vllm-ci-postmerge-repo:c92acb9693c0504d7dabed2a0251b9f5d4ddaebb
+            - image: public.ecr.aws/q9t5s3a7/vllm-ci-test-repo:4cfd785c7803bcbf65fabbd37a5ff7d5b8bb1502
