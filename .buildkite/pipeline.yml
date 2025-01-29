@@ -1,5 +1,5 @@
 steps:
-- label: Async Engine, Inputs, Utils, Worker Test
+  - label: Async Engine, Inputs, Utils, Worker Test
     agents:
         queue: moc-cpu
     soft_fail: false
