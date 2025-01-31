@@ -1,7 +1,7 @@
 steps:
-  - label: Async Engine, Inputs, Utils, Worker Test
+  - label: Python-only Installation Test
     agents:
-        queue: moc-a100
+        queue: moc-cpu
     soft_fail: false
     retry:
       automatic:
@@ -11,14 +11,10 @@ steps:
           limit: 1
     commands:
       - cd /vllm-workspace/tests
-      - python3 standalone_tests/lazy_torch_compile.py
-      - pytest -v -s mq_llm_engine # MQLLMEngine
-      - pytest -v -s async_engine # AsyncLLMEngine
-      - NUM_SCHEDULER_STEPS=4 pytest -v -s async_engine/test_async_llm_engine.py
-      - pytest -v -s test_inputs.py
-      - pytest -v -s multimodal
-      - pytest -v -s test_utils.py # Utils
-      - pytest -v -s worker # Worker
+      - pytest -v -s basic_correctness/test_cumem.py
+      - pytest -v -s basic_correctness/test_basic_correctness.py
+      - pytest -v -s basic_correctness/test_cpu_offload.py
+      - VLLM_TEST_ENABLE_ARTIFICIAL_PREEMPT=1 pytest -v -s basic_correctness/test_preemption.py
     plugins:
       - kubernetes:
           podSpec:
