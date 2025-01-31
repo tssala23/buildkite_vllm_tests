@@ -1,7 +1,7 @@
 steps:
-  - label: Python-only Installation Test
+  - label: Async Engine, Inputs, Utils, Worker Test
     agents:
-        queue: moc-cpu
+        queue: moc-a100
     soft_fail: false
     retry:
       automatic:
@@ -11,13 +11,29 @@ steps:
           limit: 1
     commands:
       - cd /vllm-workspace/tests
-      - pytest -v -s basic_correctness/test_cumem.py
-      - pytest -v -s basic_correctness/test_basic_correctness.py
-      - pytest -v -s basic_correctness/test_cpu_offload.py
-      - VLLM_TEST_ENABLE_ARTIFICIAL_PREEMPT=1 pytest -v -s basic_correctness/test_preemption.py
+      - python3 standalone_tests/lazy_torch_compile.py
+      - pytest -v -s mq_llm_engine # MQLLMEngine
+      - pytest -v -s async_engine # AsyncLLMEngine
+      - NUM_SCHEDULER_STEPS=4 pytest -v -s async_engine/test_async_llm_engine.py
+      - pytest -v -s test_inputs.py
+      - pytest -v -s multimodal
+      - pytest -v -s test_utils.py # Utils
+      - pytest -v -s worker # Worker
     plugins:
       - kubernetes:
           podSpec:
             priorityClassName: ci
             containers:
             - image: public.ecr.aws/q9t5s3a7/vllm-ci-test-repo:4cfd785c7803bcbf65fabbd37a5ff7d5b8bb1502
+              resources:
+                requests:
+                  nvidia.com/gpu: 2
+                limits:
+                  nvidia.com/gpu: 2
+            nodeSelector:
+              kubernetes.io/hostname: "wrk-4"
+            tolerations:
+            - key: "nvidia.com/gpu.product"
+              operator: "Equal"
+              value: "NVIDIA-A100-SXM4-40GB"
+              effect: "NoSchedule"
