@@ -30,10 +30,8 @@ steps:
                   nvidia.com/gpu: 2
                 limits:
                   nvidia.com/gpu: 2
-            nodeSelector:
-              kubernetes.io/hostname: "wrk-4"
-            #tolerations:
-            #- key: "nvidia.com/gpu.product"
-            #  operator: "Equal"
-            #  value: "NVIDIA-A100-SXM4-40GB"
-            #  effect: "NoSchedule"
+            tolerations:
+            - key: "nvidia.com/gpu.product"
+              operator: "Equal"
+              value: "NVIDIA-A100-SXM4-40GB"
+              effect: "NoSchedule"
