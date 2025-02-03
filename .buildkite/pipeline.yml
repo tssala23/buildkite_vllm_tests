@@ -1,5 +1,5 @@
 steps:
-- label: OpenAI-Compatible Tool Use
+  - label: OpenAI-Compatible Tool Use
     agents:
         queue: moc-cpu
     soft_fail: false
