@@ -1,5 +1,4 @@
-steps:
-  - label: Encoder Decoder tests
+- label: OpenAI-Compatible Tool Use
     agents:
         queue: moc-cpu
     soft_fail: false
@@ -11,7 +10,7 @@ steps:
           limit: 1
     commands:
       - cd /vllm-workspace/tests
-      - pytest -v -s encoder_decoder
+      - pytest -v -s tool_use
     plugins:
       - kubernetes:
           podSpec:
