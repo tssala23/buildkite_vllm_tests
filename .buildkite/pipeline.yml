@@ -1,5 +1,5 @@
 steps:
-  - label: Benchmarks
+  - label: Quantization Test
     agents:
         queue: moc-cpu
     soft_fail: false
@@ -10,8 +10,8 @@ steps:
         - exit_status: -10  # Agent was lost
           limit: 1
     commands:
-      - cd /vllm-workspace/.buildkite
-      - bash run-benchmarks.sh
+      - cd /vllm-workspace/tests
+      - VLLM_TEST_FORCE_LOAD_FORMAT=auto pytest -v -s quantization
     plugins:
       - kubernetes:
           podSpec:
