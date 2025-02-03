@@ -1,7 +1,7 @@
 steps:
-  - label: Language Models Test (Standard)
+  - label: Speculative decoding tests
     agents:
-        queue: moc-cpu
+        queue: moc-a100
     soft_fail: false
     retry:
       automatic:
@@ -11,8 +11,9 @@ steps:
           limit: 1
     commands:
       - cd /vllm-workspace/tests
-      - pytest -v -s models/decoder_only/language -m 'core_model or quant_model'
-      - pytest -v -s models/embedding/language -m core_model
+      - pytest -v -s spec_decode/e2e/test_multistep_correctness.py
+      - VLLM_ATTENTION_BACKEND=FLASH_ATTN pytest -v -s spec_decode --ignore=spec_decode/e2e/test_multistep_correctness.py
+      - pytest -v -s spec_decode/e2e/test_eagle_correctness.py
     plugins:
       - kubernetes:
           podSpec:
@@ -21,9 +22,9 @@ steps:
             - image: public.ecr.aws/q9t5s3a7/vllm-ci-test-repo:4cfd785c7803bcbf65fabbd37a5ff7d5b8bb1502
               resources:
                 requests:
-                nvidia.com/gpu: 2
+                nvidia.com/gpu: 4
                 limits:
-                  nvidia.com/gpu: 2
+                  nvidia.com/gpu: 4
               #volumeMounts:
               #- name: shm-volume
               #  mountPath: /dev/shm
