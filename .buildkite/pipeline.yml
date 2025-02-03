@@ -1,7 +1,7 @@
 steps:
-  - label:  Metrics, Tracing Test (4 GPUs)
+  - label: Regression Test
     agents:
-        queue: moc-a100
+        queue: moc-cpu
     soft_fail: false
     retry:
       automatic:
@@ -11,24 +11,19 @@ steps:
           limit: 1
     commands:
       - cd /vllm-workspace/tests
-      - pytest -v -s metrics 
-      - "pip install \
-          'opentelemetry-sdk>=1.26.0,<1.27.0' \
-          'opentelemetry-api>=1.26.0,<1.27.0' \
-          'opentelemetry-exporter-otlp>=1.26.0,<1.27.0' \
-          'opentelemetry-semantic-conventions-ai>=0.4.1,<0.5.0'"
-      - pytest -v -s tracing
+      - pip install modelscope
+      - pytest -v -s test_regression.py
     plugins:
       - kubernetes:
           podSpec:
             priorityClassName: ci
             containers:
             - image: public.ecr.aws/q9t5s3a7/vllm-ci-test-repo:4cfd785c7803bcbf65fabbd37a5ff7d5b8bb1502
-              resources:
-                requests:
-                nvidia.com/gpu: 4
-                limits:
-                  nvidia.com/gpu: 4
+              #resources:
+              #  requests:
+              #  nvidia.com/gpu: 2
+              #  limits:
+              #    nvidia.com/gpu: 2
               #volumeMounts:
               #- name: shm-volume
               #  mountPath: /dev/shm
@@ -36,8 +31,8 @@ steps:
             #- name: shm-volume
             #  persistentVolumeClaim:
             #    claimName: shm-pvc
-            tolerations:
-            - key: "nvidia.com/gpu.product"
-              operator: "Equal"
-              value: "NVIDIA-A100-SXM4-40GB"
-              effect: "NoSchedule"
+            #tolerations:
+            #- key: "nvidia.com/gpu.product"
+            #  operator: "Equal"
+            #  value: "NVIDIA-A100-SXM4-40GB"
+            #  effect: "NoSchedule"
