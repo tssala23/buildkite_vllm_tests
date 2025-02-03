@@ -1,5 +1,5 @@
 steps:
-  - label: LogitsProcessor Test
+  - label: Speculative decoding tests
     agents:
         queue: moc-cpu
     soft_fail: false
@@ -11,8 +11,9 @@ steps:
           limit: 1
     commands:
       - cd /vllm-workspace/tests
-      - pytest -v -s test_logits_processor.py
-      - pytest -v -s model_executor/test_guided_processors.py
+      - pytest -v -s spec_decode/e2e/test_multistep_correctness.py
+      - VLLM_ATTENTION_BACKEND=FLASH_ATTN pytest -v -s spec_decode --ignore=spec_decode/e2e/test_multistep_correctness.py
+      - pytest -v -s spec_decode/e2e/test_eagle_correctness.py
     plugins:
       - kubernetes:
           podSpec:
