@@ -10,7 +10,7 @@ steps:
         - exit_status: -10  # Agent was lost
           limit: 1
     commands:
-      - cd /vllm-workspace/tests
+      - cd /vllm-workspace/examples
       - pip install tensorizer # for tensorizer test
       - python3 offline_inference/basic.py
       - python3 offline_inference/cpu_offload.py
