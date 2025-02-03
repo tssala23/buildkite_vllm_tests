@@ -1,5 +1,5 @@
 steps:
-  - label: Speculative decoding tests
+  - label: "PyTorch Fullgraph Smoke Test"
     agents:
         queue: moc-cpu
     soft_fail: false
@@ -11,9 +11,10 @@ steps:
           limit: 1
     commands:
       - cd /vllm-workspace/tests
-      - pytest -v -s spec_decode/e2e/test_multistep_correctness.py
-      - VLLM_ATTENTION_BACKEND=FLASH_ATTN pytest -v -s spec_decode --ignore=spec_decode/e2e/test_multistep_correctness.py
-      - pytest -v -s spec_decode/e2e/test_eagle_correctness.py
+      - pytest -v -s compile/test_basic_correctness.py
+      # these tests need to be separated, cannot combine
+      - pytest -v -s compile/piecewise/test_simple.py
+      - pytest -v -s compile/piecewise/test_toy_llama.py
     plugins:
       - kubernetes:
           podSpec:
