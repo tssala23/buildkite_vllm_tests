@@ -10,7 +10,7 @@ steps:
         - exit_status: -10  # Agent was lost
           limit: 1
     commands:
-      - cd /vllm-workspace/tests/core
+      - cd /vllm-workspace/tests
       - pytest -v -s core
     plugins:
       - kubernetes:
