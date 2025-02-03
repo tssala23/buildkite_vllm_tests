@@ -1,5 +1,5 @@
 steps:
-  - label: Tensorizer Test
+  - label: Benchmarks
     agents:
         queue: moc-cpu
     soft_fail: false
@@ -11,9 +11,7 @@ steps:
           limit: 1
     commands:
       - cd /vllm-workspace/tests
-      - apt-get update && apt-get install -y curl libsodium23
-      - export VLLM_WORKER_MULTIPROC_METHOD=spawn
-      - pytest -v -s tensorizer_loader
+      - bash run-benchmarks.sh
     plugins:
       - kubernetes:
           podSpec:
