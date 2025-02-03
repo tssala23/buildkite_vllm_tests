@@ -1,5 +1,5 @@
 steps:
-  - label: Quantization Test
+  - label: LM Eval Small Models
     agents:
         queue: moc-cpu
     soft_fail: false
@@ -11,7 +11,8 @@ steps:
           limit: 1
     commands:
       - cd /vllm-workspace/tests
-      - VLLM_TEST_FORCE_LOAD_FORMAT=auto pytest -v -s quantization
+      - export VLLM_WORKER_MULTIPROC_METHOD=spawn
+      - bash ./run-tests.sh -c configs/models-small.txt -t 1
     plugins:
       - kubernetes:
           podSpec:
