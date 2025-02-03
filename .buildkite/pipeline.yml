@@ -11,6 +11,7 @@ steps:
           limit: 1
     commands:
       - cd /vllm-workspace/tests
+      - sleep 6000
       - python3 standalone_tests/lazy_torch_compile.py
       - pytest -v -s mq_llm_engine # MQLLMEngine
       - pytest -v -s async_engine # AsyncLLMEngine
