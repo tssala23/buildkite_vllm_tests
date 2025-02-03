@@ -1,7 +1,7 @@
 steps:
-  - label: Entrypoints Test
+  - label: Distributed Tests (4 GPUs)
     agents:
-        queue: moc-cpu
+        queue: moc-a100
     soft_fail: false
     retry:
       automatic:
@@ -11,14 +11,13 @@ steps:
           limit: 1
     commands:
       - cd /vllm-workspace/tests
-      - pytest -v -s entrypoints/llm --ignore=entrypoints/llm/test_lazy_outlines.py --ignore=entrypoints/llm/test_generate.py --ignore=entrypoints/llm/test_generate_multiple_loras.py --ignore=entrypoints/llm/test_guided_generate.py --ignore=entrypoints/llm/test_collective_rpc.py
-      - pytest -v -s entrypoints/llm/test_lazy_outlines.py # it needs a clean process
-      - pytest -v -s entrypoints/llm/test_generate.py # it needs a clean process
-      - pytest -v -s entrypoints/llm/test_generate_multiple_loras.py # it needs a clean process
-      - pytest -v -s entrypoints/llm/test_guided_generate.py # it needs a clean process
-      - pytest -v -s entrypoints/openai --ignore=entrypoints/openai/test_oot_registration.py
-      - pytest -v -s entrypoints/test_chat_utils.py
-      - pytest -v -s entrypoints/offline_mode # Needs to avoid interference with other tests
+      - pytest -v -s distributed/test_utils.py
+      - pytest -v -s compile/test_basic_correctness.py
+      - pytest -v -s distributed/test_pynccl.py
+      - pytest -v -s spec_decode/e2e/test_integration_dist_tp4.py
+      # TODO: create a dedicated test section for multi-GPU example tests
+      # when we have multiple distributed example tests
+      - python3 ../examples/offline_inference/rlhf.py
     plugins:
       - kubernetes:
           podSpec:
@@ -27,9 +26,9 @@ steps:
             - image: public.ecr.aws/q9t5s3a7/vllm-ci-test-repo:4cfd785c7803bcbf65fabbd37a5ff7d5b8bb1502
               resources:
                 requests:
-                nvidia.com/gpu: 2
+                nvidia.com/gpu: 4
                 limits:
-                  nvidia.com/gpu: 2
+                  nvidia.com/gpu: 4
             tolerations:
             - key: "nvidia.com/gpu.product"
               operator: "Equal"
