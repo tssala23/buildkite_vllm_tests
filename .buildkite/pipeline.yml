@@ -1,5 +1,5 @@
 steps:
-  - label: Distributed Tests (4 GPUs)
+  - label:  Metrics, Tracing Test (4 GPUs)
     agents:
         queue: moc-a100
     soft_fail: false
@@ -11,13 +11,13 @@ steps:
           limit: 1
     commands:
       - cd /vllm-workspace/tests
-      - pytest -v -s distributed/test_utils.py
-      - pytest -v -s compile/test_basic_correctness.py
-      - pytest -v -s distributed/test_pynccl.py
-      - pytest -v -s spec_decode/e2e/test_integration_dist_tp4.py
-      # TODO: create a dedicated test section for multi-GPU example tests
-      # when we have multiple distributed example tests
-      - python3 ../examples/offline_inference/rlhf.py
+      - pytest -v -s metrics 
+      - "pip install \
+          'opentelemetry-sdk>=1.26.0,<1.27.0' \
+          'opentelemetry-api>=1.26.0,<1.27.0' \
+          'opentelemetry-exporter-otlp>=1.26.0,<1.27.0' \
+          'opentelemetry-semantic-conventions-ai>=0.4.1,<0.5.0'"
+      - pytest -v -s tracing
     plugins:
       - kubernetes:
           podSpec:
