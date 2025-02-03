@@ -1,5 +1,5 @@
 steps:
-  - label: Samplers Test
+  - label: LogitsProcessor Test
     agents:
         queue: moc-cpu
     soft_fail: false
@@ -11,8 +11,8 @@ steps:
           limit: 1
     commands:
       - cd /vllm-workspace/tests
-      - pytest -v -s samplers
-      - VLLM_USE_FLASHINFER_SAMPLER=1 pytest -v -s samplers
+      - pytest -v -s test_logits_processor.py
+      - pytest -v -s model_executor/test_guided_processors.py
     plugins:
       - kubernetes:
           podSpec:
