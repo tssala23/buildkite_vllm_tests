@@ -1,5 +1,5 @@
 steps:
-  - label: Engine Test
+  - label: V1 Test
     agents:
         queue: moc-cpu
     soft_fail: false
@@ -11,15 +11,13 @@ steps:
           limit: 1
     commands:
       - cd /vllm-workspace/tests
-      - pytest -v -s engine test_sequence.py test_config.py test_logger.py
-      # OOM in the CI unless we run this separately
-      - pytest -v -s tokenization
+      - VLLM_USE_V1=1 pytest -v -s v1
     plugins:
       - kubernetes:
           podSpec:
             priorityClassName: ci
             containers:
-            - image: public.ecr.aws/q9t5s3a7/vllm-ci-test-repo:4cfd785c7803bcbf65fabbd37a5ff7d5b8bb1502
+            - image: public.ecr.aws/q9t5s3a7/vllm-ci-postmerge-repo:c92acb9693c0504d7dabed2a0251b9f5d4ddaebb
               #resources:
               #  requests:
               #  nvidia.com/gpu: 2
