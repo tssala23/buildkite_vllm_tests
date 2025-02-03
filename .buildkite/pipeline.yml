@@ -1,5 +1,5 @@
 steps:
-  - label: LM Eval Small Models
+  - label: Encoder Decoder tests
     agents:
         queue: moc-cpu
     soft_fail: false
@@ -10,9 +10,8 @@ steps:
         - exit_status: -10  # Agent was lost
           limit: 1
     commands:
-      - cd /vllm-workspace/.buildkite/lm-eval-harness
-      - export VLLM_WORKER_MULTIPROC_METHOD=spawn
-      - bash ./run-tests.sh -c configs/models-small.txt -t 1
+      - cd /vllm-workspace/tests
+      - pytest -v -s encoder_decoder
     plugins:
       - kubernetes:
           podSpec:
