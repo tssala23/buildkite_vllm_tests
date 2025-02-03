@@ -1,5 +1,5 @@
 steps:
-  - label: Core Test
+  - label: Entrypoints Test
     agents:
         queue: moc-cpu
     soft_fail: false
@@ -11,7 +11,14 @@ steps:
           limit: 1
     commands:
       - cd /vllm-workspace/tests
-      - pytest -v -s core
+      - pytest -v -s entrypoints/llm --ignore=entrypoints/llm/test_lazy_outlines.py --ignore=entrypoints/llm/test_generate.py --ignore=entrypoints/llm/test_generate_multiple_loras.py --ignore=entrypoints/llm/test_guided_generate.py --ignore=entrypoints/llm/test_collective_rpc.py
+      - pytest -v -s entrypoints/llm/test_lazy_outlines.py # it needs a clean process
+      - pytest -v -s entrypoints/llm/test_generate.py # it needs a clean process
+      - pytest -v -s entrypoints/llm/test_generate_multiple_loras.py # it needs a clean process
+      - pytest -v -s entrypoints/llm/test_guided_generate.py # it needs a clean process
+      - pytest -v -s entrypoints/openai --ignore=entrypoints/openai/test_oot_registration.py
+      - pytest -v -s entrypoints/test_chat_utils.py
+      - pytest -v -s entrypoints/offline_mode # Needs to avoid interference with other tests
     plugins:
       - kubernetes:
           podSpec:
