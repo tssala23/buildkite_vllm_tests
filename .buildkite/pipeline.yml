@@ -21,13 +21,13 @@ steps:
             priorityClassName: ci
             containers:
             - image: public.ecr.aws/q9t5s3a7/vllm-ci-test-repo:4cfd785c7803bcbf65fabbd37a5ff7d5b8bb1502
-              #resources:
-              #  requests:
-              #    nvidia.com/gpu: 2
-              #  limits:
-              #    nvidia.com/gpu: 2
-            #tolerations:
-            #- key: "nvidia.com/gpu.product"
-            #  operator: "Equal"
-            #  value: "NVIDIA-A100-SXM4-40GB"
-            #  effect: "NoSchedule"
+              resources:
+                requests:
+                  nvidia.com/gpu: 2
+                limits:
+                  nvidia.com/gpu: 2
+            tolerations:
+            - key: "nvidia.com/gpu.product"
+              operator: "Equal"
+              value: "NVIDIA-A100-SXM4-40GB"
+              effect: "NoSchedule"
