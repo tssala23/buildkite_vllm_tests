@@ -29,13 +29,13 @@ steps:
                 nvidia.com/gpu: 4
                 limits:
                   nvidia.com/gpu: 4
-              volumeMounts:
-              - name: shm-volume
-                mountPath: /dev/shm
-            volumes:
-            - name: shm-volume
-              persistentVolumeClaim:
-                claimName: shm-pvc
+              #volumeMounts:
+              #- name: shm-volume
+              #  mountPath: /dev/shm
+            #volumes:
+            #- name: shm-volume
+            #  persistentVolumeClaim:
+            #    claimName: shm-pvc
             tolerations:
             - key: "nvidia.com/gpu.product"
               operator: "Equal"
