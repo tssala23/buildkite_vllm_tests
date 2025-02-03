@@ -31,11 +31,11 @@ steps:
             priorityClassName: ci
             containers:
             - image: public.ecr.aws/q9t5s3a7/vllm-ci-postmerge-repo:c92acb9693c0504d7dabed2a0251b9f5d4ddaebb
-              resources:
-                requests:
-                nvidia.com/gpu: 2
-                limits:
-                  nvidia.com/gpu: 2
+              #resources:
+              #  requests:
+              #  nvidia.com/gpu: 2
+              #  limits:
+              #    nvidia.com/gpu: 2
               #volumeMounts:
               #- name: shm-volume
               #  mountPath: /dev/shm
@@ -43,8 +43,8 @@ steps:
             #- name: shm-volume
             #  persistentVolumeClaim:
             #    claimName: shm-pvc
-            tolerations:
-            - key: "nvidia.com/gpu.product"
-              operator: "Equal"
-              value: "NVIDIA-A100-SXM4-40GB"
-              effect: "NoSchedule"
+            #tolerations:
+            #- key: "nvidia.com/gpu.product"
+            #  operator: "Equal"
+            #  value: "NVIDIA-A100-SXM4-40GB"
+            #  effect: "NoSchedule"
