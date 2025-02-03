@@ -1,5 +1,5 @@
 steps:
-  - label: Python-only Installation Test
+  - label: Chunked Prefill Test
     agents:
         queue: moc-cpu
     soft_fail: false
@@ -11,23 +11,21 @@ steps:
           limit: 1
     commands:
       - cd /vllm-workspace/tests
-      - pytest -v -s basic_correctness/test_cumem.py
-      - pytest -v -s basic_correctness/test_basic_correctness.py
-      - pytest -v -s basic_correctness/test_cpu_offload.py
-      - VLLM_TEST_ENABLE_ARTIFICIAL_PREEMPT=1 pytest -v -s basic_correctness/test_preemption.py
+      - VLLM_ATTENTION_BACKEND=XFORMERS pytest -v -s basic_correctness/test_chunked_prefill.py
+      - VLLM_ATTENTION_BACKEND=FLASH_ATTN pytest -v -s basic_correctness/test_chunked_prefill.py
     plugins:
       - kubernetes:
           podSpec:
             priorityClassName: ci
             containers:
             - image: public.ecr.aws/q9t5s3a7/vllm-ci-test-repo:4cfd785c7803bcbf65fabbd37a5ff7d5b8bb1502
-              resources:
-                requests:
-                  nvidia.com/gpu: 2
-                limits:
-                  nvidia.com/gpu: 2
-            tolerations:
-            - key: "nvidia.com/gpu.product"
-              operator: "Equal"
-              value: "NVIDIA-A100-SXM4-40GB"
-              effect: "NoSchedule"
+              #resources:
+              #  requests:
+              #    nvidia.com/gpu: 2
+              #  limits:
+              #    nvidia.com/gpu: 2
+            #tolerations:
+            #- key: "nvidia.com/gpu.product"
+            #  operator: "Equal"
+            #  value: "NVIDIA-A100-SXM4-40GB"
+            #  effect: "NoSchedule"
