@@ -1,7 +1,7 @@
 steps:
   - label: Benchmarks
     agents:
-        queue: moc-a100
+        queue: moc-cpu
     soft_fail: false
     retry:
       automatic:
