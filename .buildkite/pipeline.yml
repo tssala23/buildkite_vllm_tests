@@ -1,5 +1,5 @@
 steps:
-- label: Python-only Installation Test
+  - label: Python-only Installation Test
     agents:
         queue: moc-cpu
     soft_fail: false
