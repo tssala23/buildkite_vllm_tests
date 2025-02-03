@@ -1,5 +1,5 @@
 steps:
-  - label: OpenAI-Compatible Tool Use
+  - label: Basic Models Test
     agents:
         queue: moc-cpu
     soft_fail: false
@@ -11,7 +11,8 @@ steps:
           limit: 1
     commands:
       - cd /vllm-workspace/tests
-      - pytest -v -s tool_use
+      - pytest -v -s models/test_registry.py
+      - pytest -v -s models/test_initialization.py
     plugins:
       - kubernetes:
           podSpec:
