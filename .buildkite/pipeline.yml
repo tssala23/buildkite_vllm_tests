@@ -10,7 +10,6 @@ steps:
         - exit_status: -10  # Agent was lost
           limit: 1
     commands:
-      - sleep 600
       - cd /vllm-workspace/.buildkite
       - bash run-benchmarks.sh
     plugins:
