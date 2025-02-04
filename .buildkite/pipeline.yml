@@ -1,5 +1,5 @@
 steps:
-  - label: Speculative decoding tests
+  - label: Chunked Prefill Test
     agents:
         queue: moc-a100
     soft_fail: false
@@ -11,9 +11,8 @@ steps:
           limit: 1
     commands:
       - cd /vllm-workspace/tests
-      - pytest -v -s spec_decode/e2e/test_multistep_correctness.py
-      - VLLM_ATTENTION_BACKEND=FLASH_ATTN pytest -v -s spec_decode --ignore=spec_decode/e2e/test_multistep_correctness.py
-      - pytest -v -s spec_decode/e2e/test_eagle_correctness.py
+      - VLLM_ATTENTION_BACKEND=XFORMERS pytest -v -s basic_correctness/test_chunked_prefill.py
+      - VLLM_ATTENTION_BACKEND=FLASH_ATTN pytest -v -s basic_correctness/test_chunked_prefill.py
     plugins:
       - kubernetes:
           podSpec:
