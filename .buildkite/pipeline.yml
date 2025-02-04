@@ -1,5 +1,5 @@
 steps:
-  - label: Examples Test
+  - label: Async Engine, Inputs, Utils, Worker Test
     agents:
         queue: moc-a100
     soft_fail: false
@@ -10,21 +10,15 @@ steps:
         - exit_status: -10  # Agent was lost
           limit: 1
     commands:
-      - cd /vllm-workspace/examples
-      - pip install tensorizer # for tensorizer test
-      - python3 offline_inference/basic.py
-      - python3 offline_inference/cpu_offload.py
-      - python3 offline_inference/chat.py
-      - python3 offline_inference/prefix_caching.py
-      - python3 offline_inference/llm_engine_example.py
-      - python3 offline_inference/vision_language.py
-      - python3 offline_inference/vision_language_multi_image.py
-      - python3 other/tensorize_vllm_model.py --model facebook/opt-125m serialize --serialized-directory /tmp/ --suffix v1 && python3 other/tensorize_vllm_model.py --model facebook/opt-125m deserialize --path-to-tensors /tmp/vllm/facebook/opt-125m/v1/model.tensors
-      - python3 offline_inference/encoder_decoder.py
-      - python3 offline_inference/classification.py
-      - python3 offline_inference/embedding.py
-      - python3 offline_inference/scoring.py
-      - python3 offline_inference/profiling.py --model facebook/opt-125m run_num_steps --num-steps 2
+      - cd /vllm-workspace/tests
+      - python3 standalone_tests/lazy_torch_compile.py
+      - pytest -v -s mq_llm_engine # MQLLMEngine
+      - pytest -v -s async_engine # AsyncLLMEngine
+      - NUM_SCHEDULER_STEPS=4 pytest -v -s async_engine/test_async_llm_engine.py
+      - pytest -v -s test_inputs.py
+      - pytest -v -s multimodal
+      - pytest -v -s test_utils.py # Utils
+      - pytest -v -s worker # Worker
     plugins:
       - kubernetes:
           podSpec:
