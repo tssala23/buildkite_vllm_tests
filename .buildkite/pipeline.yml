@@ -1,5 +1,5 @@
 steps:
-  - label: Async Engine, Inputs, Utils, Worker Test
+  - label: Entrypoints Test
     agents:
         queue: moc-a100
     soft_fail: false
@@ -11,14 +11,14 @@ steps:
           limit: 1
     commands:
       - cd /vllm-workspace/tests
-      - python3 standalone_tests/lazy_torch_compile.py
-      - pytest -v -s mq_llm_engine # MQLLMEngine
-      - pytest -v -s async_engine # AsyncLLMEngine
-      - NUM_SCHEDULER_STEPS=4 pytest -v -s async_engine/test_async_llm_engine.py
-      - pytest -v -s test_inputs.py
-      - pytest -v -s multimodal
-      - pytest -v -s test_utils.py # Utils
-      - pytest -v -s worker # Worker
+      - pytest -v -s entrypoints/llm --ignore=entrypoints/llm/test_lazy_outlines.py --ignore=entrypoints/llm/test_generate.py --ignore=entrypoints/llm/test_generate_multiple_loras.py --ignore=entrypoints/llm/test_guided_generate.py --ignore=entrypoints/llm/test_collective_rpc.py
+      - pytest -v -s entrypoints/llm/test_lazy_outlines.py # it needs a clean process
+      - pytest -v -s entrypoints/llm/test_generate.py # it needs a clean process
+      - pytest -v -s entrypoints/llm/test_generate_multiple_loras.py # it needs a clean process
+      - pytest -v -s entrypoints/llm/test_guided_generate.py # it needs a clean process
+      - pytest -v -s entrypoints/openai --ignore=entrypoints/openai/test_oot_registration.py
+      - pytest -v -s entrypoints/test_chat_utils.py
+      - pytest -v -s entrypoints/offline_mode # Needs to avoid interference with other tests
     plugins:
       - kubernetes:
           podSpec:
