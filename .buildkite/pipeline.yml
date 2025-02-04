@@ -1,7 +1,7 @@
 steps:
-  - label: Python-only Installation Test
+  - label: Quantization Test
     agents:
-        queue: moc-cpu
+        queue: moc-a100
     soft_fail: false
     retry:
       automatic:
@@ -11,10 +11,7 @@ steps:
           limit: 1
     commands:
       - cd /vllm-workspace/tests
-      - pytest -v -s basic_correctness/test_cumem.py
-      - pytest -v -s basic_correctness/test_basic_correctness.py
-      - pytest -v -s basic_correctness/test_cpu_offload.py
-      - VLLM_TEST_ENABLE_ARTIFICIAL_PREEMPT=1 pytest -v -s basic_correctness/test_preemption.py
+      - VLLM_TEST_FORCE_LOAD_FORMAT=auto pytest -v -s quantization
     plugins:
       - kubernetes:
           podSpec:
