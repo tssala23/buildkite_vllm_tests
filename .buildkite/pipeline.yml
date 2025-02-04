@@ -1,5 +1,5 @@
 steps:
-  - label: Language Models Test (Standard)
+  - label: Samplers Test
     agents:
         queue: moc-cpu
     soft_fail: false
@@ -11,8 +11,8 @@ steps:
           limit: 1
     commands:
       - cd /vllm-workspace/tests
-      - pytest -v -s models/decoder_only/language -m 'core_model or quant_model'
-      - pytest -v -s models/embedding/language -m core_model
+      - pytest -v -s samplers
+      - VLLM_USE_FLASHINFER_SAMPLER=1 pytest -v -s samplers
     plugins:
       - kubernetes:
           podSpec:
